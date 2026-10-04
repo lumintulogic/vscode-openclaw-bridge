@@ -18,11 +18,27 @@ This skill enables OpenClaw agents to connect to a running VS Code Server instan
 
 ---
 
-## Configuration & Authentication
+## Interactive Setup & Provisioning (Chat Mode)
 
-When VS Code Server is hosted behind a domain (e.g. `https://vscode.yourdomain.com`) protected by Cloudflare Zero Trust (ZTNA), VS Code Server natively reverse-proxies port `8090` at `/proxy/8090/`.
+When installing or activating this skill, OpenClaw should proactively inquire the user in chat for configuration details if they are not already set:
 
-Set the following environment variables in OpenClaw:
+> **OpenClaw Prompt to User**:
+> *"To connect to your VS Code Server terminal monitor, please provide:*
+> 1. *VS Code Server URL (e.g., `https://vscode.yourdomain.com`)*
+> 2. *Cloudflare Access Client ID (`CF-Access-Client-Id`)*
+> 3. *Cloudflare Access Client Secret (`CF-Access-Client-Secret`)"*
+
+Once the user provides the details in chat, OpenClaw executes:
+```bash
+node scripts/setup.js --host "<VSCODE_URL>" \
+                      --client-id "<CF_CLIENT_ID>" \
+                      --client-secret "<CF_CLIENT_SECRET>"
+```
+This automatically formats the URLs (`https://<host>/proxy/8090/`), saves the credentials into `.env`, runs an end-to-end health probe through Cloudflare Access, and confirms the connection status back to the user.
+
+---
+
+## Configuration & Environment Variables
 
 | Variable | Required | Description | Example |
 |---|---|---|---|

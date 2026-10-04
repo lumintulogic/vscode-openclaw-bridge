@@ -1,5 +1,19 @@
 #!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
 const WebSocket = require('ws');
+
+// Automatically read .env in the skill directory if present
+const envFile = path.resolve(__dirname, '..', '.env');
+if (fs.existsSync(envFile)) {
+  const lines = fs.readFileSync(envFile, 'utf-8').split('\n');
+  for (const line of lines) {
+    const match = line.trim().match(/^([A-Za-z0-9_]+)=(.*)$/);
+    if (match && !process.env[match[1]]) {
+      process.env[match[1]] = match[2];
+    }
+  }
+}
 
 const command = process.argv.slice(2).join(' ');
 if (!command) {
