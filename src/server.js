@@ -105,6 +105,14 @@ function validateAuth(req) {
 // Create HTTP Server
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  
+  // Strip code-server proxy prefix if present (e.g. /proxy/8090/health -> /health)
+  let pathname = url.pathname;
+  if (pathname.startsWith('/proxy/8090')) {
+    pathname = pathname.slice('/proxy/8090'.length) || '/';
+  } else if (pathname.startsWith(`/proxy/${config.port}`)) {
+    pathname = pathname.slice(`/proxy/${config.port}`.length) || '/';
+  }
 
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -118,7 +126,7 @@ const server = http.createServer((req, res) => {
   }
 
   // Health endpoint
-  if (url.pathname === '/health') {
+  if (pathname === '/health') {
     const isHealthy = ptyProcess !== null;
     res.writeHead(isHealthy ? 200 : 503, { 'Content-Type': 'application/json' });
     res.end(
@@ -135,7 +143,7 @@ const server = http.createServer((req, res) => {
   }
 
   // Detailed Status endpoint
-  if (url.pathname === '/status') {
+  if (pathname === '/status') {
     if (!validateAuth(req)) {
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Unauthorized: Invalid Cloudflare Service Token' }));

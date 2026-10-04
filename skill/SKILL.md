@@ -20,24 +20,28 @@ This skill enables OpenClaw agents to connect to a running VS Code Server instan
 
 ## Configuration & Authentication
 
-Set the following environment variables in your OpenClaw environment:
+When VS Code Server is hosted behind a domain (e.g. `https://vscode.yourdomain.com`) protected by Cloudflare Zero Trust (ZTNA), VS Code Server natively reverse-proxies port `8090` at `/proxy/8090/`.
 
-| Variable | Required | Description | Default |
+Set the following environment variables in OpenClaw:
+
+| Variable | Required | Description | Example |
 |---|---|---|---|
-| `VSCODE_MONITOR_URL` | No | WebSocket URL for the bridge | `ws://127.0.0.1:8090` |
-| `VSCODE_HTTP_URL` | No | Base HTTP URL for health/status checks | `http://127.0.0.1:8090` |
-| `CF_ACCESS_CLIENT_ID` | Optional | Cloudflare ZTNA Service Token Client ID | `""` |
-| `CF_ACCESS_CLIENT_SECRET` | Optional | Cloudflare ZTNA Service Token Secret | `""` |
+| `VSCODE_MONITOR_URL` | Yes (External) | WebSocket URL through VS Code proxy | `wss://vscode.yourdomain.com/proxy/8090/` |
+| `VSCODE_HTTP_URL` | Yes (External) | HTTP Base URL through VS Code proxy | `https://vscode.yourdomain.com/proxy/8090` |
+| `CF_ACCESS_CLIENT_ID` | Required for CF | Cloudflare Service Token Client ID | `xxxxxx.access` |
+| `CF_ACCESS_CLIENT_SECRET` | Required for CF | Cloudflare Service Token Secret | `yyyyyy...` |
 
 ---
 
 ## Agent Usage Instructions
 
 ### 1. Check Health & Connectivity
-Before interacting with the terminal, verify the bridge is active and healthy:
+Test connectivity through Cloudflare Access:
 
 ```bash
-curl -s http://<vscode-host>:8090/health
+curl -s -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
+        -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" \
+        https://vscode.yourdomain.com/proxy/8090/health
 ```
 
 Expected JSON response:
