@@ -1,0 +1,26 @@
+{
+  "name": "vscode-monitor",
+  "version": "1.0.0",
+  "description": "Bidirectional stdio monitoring bridge for VS Code Server and OpenClaw agents via tmux and WebSocket",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test:client": "node scripts/test-client.js"
+  },
+  "keywords": [
+    "openclaw",
+    "vscode",
+    "tmux",
+    "pty",
+    "websocket",
+    "stdio",
+    "monitor"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "node-pty": "^1.0.2",
+    "ws": "^8.18.0"
+  }
+}
