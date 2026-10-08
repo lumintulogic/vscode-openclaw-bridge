@@ -74,7 +74,30 @@ Open a terminal in VS Code and run:
 ```bash
 ./scripts/attach-session.sh
 ```
-To detach without terminating the session: press `Ctrl+B`, then `D`.
+
+#### Beginner's Guide: Exiting & Managing `tmux`
+
+When attached to the `tmux` session, choose how you want to exit:
+
+* **Detach (Keep running in background — Recommended)**:
+  1. Press **`Ctrl + B`** together.
+  2. Release both keys.
+  3. Press **`D`**.
+  
+  > **Note**: Detaching leaves your CLI processes running and keeps the bridge active so external agents (like OpenClaw) can continue monitoring or sending commands uninterrupted.
+
+* **Exit & Kill Session (Stop completely)**:
+  * Type `exit` and press `Enter` (or press **`Ctrl + D`**).
+  > **Warning**: This terminates the running shell process inside tmux.
+
+* **Terminate or detach from outside `tmux`**:
+  ```bash
+  # Check active sessions
+  tmux ls
+
+  # Terminate the agent session completely
+  tmux kill-session -t agent-session
+  ```
 
 ### 4. Run Verification Client Test
 
