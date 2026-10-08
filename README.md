@@ -105,6 +105,42 @@ CF_ACCESS_CLIENT_SECRET=
 
 ## OpenClaw Agent Integration
 
+### Registering & Installing as a Skill via Chat
+
+This repository is structured as a native OpenClaw skill (`SKILL.md` and `skill.json` at root). You can register and install it directly through chat in OpenClaw.
+
+#### 1. Install via Chat Prompt
+Send either of the following into your OpenClaw chat (Telegram, Discord, Slack, or Web UI):
+
+```text
+/openclaw skills install https://github.com/lumintulogic/vscode-openclaw-bridge
+```
+or
+> *"Please install and register the skill from https://github.com/lumintulogic/vscode-openclaw-bridge"*
+
+#### 2. Interactive Chat Configuration
+If configuration is needed, OpenClaw will prompt you in chat:
+
+> **OpenClaw**:
+> *"To connect to your VS Code Server terminal monitor, please provide:*
+> 1. *VS Code Server URL (e.g. `https://vscode.yourdomain.com` or `http://localhost:8090`)*
+> 2. *Cloudflare Access Client ID (optional)*
+> 3. *Cloudflare Access Client Secret (optional)"*
+
+Provide your values directly in the conversation:
+> **User**:
+> *"URL is `https://vscode.example.com`, Client ID is `xxx.access`, Secret is `yyy`"*
+
+OpenClaw will run `node scripts/setup.js`, verify the connection over HTTP and WebSocket, and confirm that the skill is ready.
+
+#### 3. Command Execution from Chat
+Once registered, OpenClaw can monitor and run commands in your VS Code terminal:
+> **User in Chat**: *"Run `npm test` in the VS Code terminal and report the output"*
+>
+> **OpenClaw**: *(Executes `node scripts/send_command.js "npm test"` and streams results back into chat)*
+
+---
+
 ### Example 1: Node.js WebSocket Client
 ```javascript
 const WebSocket = require('ws');

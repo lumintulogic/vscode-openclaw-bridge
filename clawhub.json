@@ -1,0 +1,10 @@
+{
+  "name": "vscode-stdio-monitor",
+  "version": "1.0.0",
+  "description": "Bidirectional stdio monitoring bridge for VS Code Server and OpenClaw agents via tmux and WebSocket",
+  "skills": [
+    "vscode-stdio-monitor"
+  ],
+  "entry": "SKILL.md",
+  "repository": "https://github.com/lumintulogic/vscode-openclaw-bridge"
+}

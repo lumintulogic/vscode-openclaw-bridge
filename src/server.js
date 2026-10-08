@@ -1,7 +1,35 @@
 const http = require('http');
 const WebSocket = require('ws');
-const pty = require('node-pty');
+const path = require('path');
 const config = require('./config');
+
+let pty;
+try {
+  pty = require('node-pty');
+} catch (loadErr) {
+  console.warn('[Bridge] Native node-pty addon not loaded:', loadErr.message);
+  console.warn('[Bridge] Attempting automatic node-gyp compilation...');
+  try {
+    const { execSync } = require('child_process');
+    const ptyPkgDir = path.dirname(require.resolve('node-pty/package.json'));
+    execSync('npx --yes node-gyp rebuild', { cwd: ptyPkgDir, stdio: 'inherit' });
+    // Clear require cache and retry require
+    for (const modPath of Object.keys(require.cache)) {
+      if (modPath.includes('node-pty')) {
+        delete require.cache[modPath];
+      }
+    }
+    pty = require('node-pty');
+    console.log('[Bridge] Successfully compiled and loaded native node-pty module.');
+  } catch (rebuildErr) {
+    console.error('\n[Bridge] Fatal: Failed to compile or load native module node-pty.');
+    console.error(`- Load error: ${loadErr.message}`);
+    console.error(`- Rebuild error: ${rebuildErr.message}`);
+    console.error('\nTo resolve manually:');
+    console.error('  cd node_modules/node-pty && npx --yes node-gyp rebuild\n');
+    process.exit(1);
+  }
+}
 
 // Ensure PATH includes /config/bin if tmux was installed there
 if (!process.env.PATH.includes('/config/bin')) {

@@ -1,0 +1,86 @@
+{
+  "name": "vscode-stdio-monitor",
+  "version": "1.0.0",
+  "description": "Monitor and interact bidirectionally with VS Code Server CLI agents and terminal sessions via tmux WebSocket bridge.",
+  "author": "lumintulogic",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lumintulogic/vscode-openclaw-bridge.git"
+  },
+  "keywords": [
+    "openclaw",
+    "skill",
+    "vscode",
+    "terminal",
+    "tmux",
+    "stdio",
+    "monitor",
+    "bridge"
+  ],
+  "main": "scripts/send_command.js",
+  "setup": "scripts/setup.js",
+  "config": {
+    "host": {
+      "type": "string",
+      "description": "VS Code Server URL (e.g. https://vscode.yourdomain.com or http://localhost:8090)",
+      "required": true
+    },
+    "clientId": {
+      "type": "string",
+      "description": "Cloudflare Access Client ID (CF-Access-Client-Id)",
+      "required": false
+    },
+    "clientSecret": {
+      "type": "string",
+      "description": "Cloudflare Access Client Secret (CF-Access-Client-Secret)",
+      "secret": true,
+      "required": false
+    }
+  },
+  "tools": [
+    {
+      "name": "setup_vscode_monitor",
+      "description": "Register and configure the VS Code Stdio Monitor bridge connection",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "VS Code Server URL (e.g. https://vscode.yourdomain.com or http://localhost:8090)"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "Cloudflare Access Service Token Client ID"
+          },
+          "clientSecret": {
+            "type": "string",
+            "description": "Cloudflare Access Service Token Secret"
+          }
+        },
+        "required": ["host"]
+      }
+    },
+    {
+      "name": "send_terminal_command",
+      "description": "Send a command to the VS Code terminal session stdin and receive real-time stdout",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Command or input string to send to terminal stdin"
+          },
+          "raw": {
+            "type": "boolean",
+            "description": "Send raw keystrokes/control characters without trailing newline"
+          },
+          "timeout": {
+            "type": "number",
+            "description": "Milliseconds to wait for output after sending (default 5000)"
+          }
+        },
+        "required": ["command"]
+      }
+    }
+  ]
+}
